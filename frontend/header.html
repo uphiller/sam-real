@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <script>
+        let gUrl = "https://m7exho74yc.execute-api.ap-northeast-2.amazonaws.com/Prod";
+        $(document).ready(function () {
+            loginCheck();
+        });
+
+        function openClose() {
+            if ($("#post-box").css("display") == "block") {
+                $("#post-box").hide();
+                $("#btn-post-box").text("포스팅 박스 열기");
+            } else {
+                $("#post-url").val('');
+                $("#post-comment").val('');
+                $("#post-box").show();
+                $("#btn-post-box").text("포스팅 박스 닫기");
+            }
+        }
+
+        function openCloseLogin() {
+            $('#login-id').val('');
+            $('#login-pwd').val('');
+            $('#loginModal').modal('show');
+        }
+
+        function login() {
+            $.ajax({
+                type: "POST",
+                url: `${gUrl}/login`,
+                data: JSON.stringify({id: $("#login-id").val(), pwd: $("#login-pwd").val()}),
+                success: function (response) {
+                    localStorage.setItem('token', response['token']);
+                    alert("로그인 되었습니다!!");
+                    $('#loginModal').modal('hide');
+                    loginCheck();
+                }
+            })
+        }
+
+        function openCloseJoin() {
+            $('#joinModal').modal('show');
+        }
+
+        function join() {
+            $.ajax({
+                type: "POST",
+                url: `${gUrl}/join`,
+                data: JSON.stringify({id: $("#join-id").val(), pwd: $("#join-pwd").val()}),
+                success: function (response) {
+                    alert("로그인 해주세요!!");
+                    $('#joinModal').modal('hide');
+                }
+            })
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            $('#btn-login').show();
+            $('#btn-logout').hide();
+            $('#btn-join').show();
+        }
+
+        function loginCheck() {
+            if (localStorage.getItem('token')) {
+                $('#btn-login').hide();
+                $('#btn-logout').show();
+                $('#btn-join').hide();
+            }
+        }
+
+        function loginCheck() {
+            if (localStorage.getItem('token')) {
+                $('#btn-login').hide();
+                $('#btn-logout').show();
+                $('#btn-join').hide();
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="jumbotron">
+    <h1 class="display-4">질문합시다!!</h1>
+    <hr class="my-4">
+    <p class="lead">
+        <button onclick="openClose()" id="btn-post-box" type="button" class="btn btn-primary">포스팅 박스 열기</button>
+        <button onclick="openCloseLogin()" id="btn-login" type="button" class="btn btn-secondary">로그인</button>
+        <button onclick="logout()" id="btn-logout" type="button" class="btn btn-danger" style="display:none">로그아웃
+        </button>
+        <button onclick="openCloseJoin()" id="btn-join" type="button" class="btn btn-success">회원가입</button>
+    </p>
+</div>
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">로그인</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="login-id" class="col-form-label">아이디</label>
+                        <input type="text" class="form-control" id="login-id">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-pwd" class="col-form-label">패스워드</label>
+                        <input type="password" class="form-control" id="login-pwd">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="login()">로그인</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Join Modal -->
+<div class="modal fade" id="joinModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">회원가입</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="join-id" class="col-form-label">아이디</label>
+                        <input type="text" class="form-control" id="join-id">
+                    </div>
+                    <div class="form-group">
+                        <label for="join-pwd" class="col-form-label">패스워드</label>
+                        <input type="password" class="form-control" id="join-pwd">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="join()">회원가입</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

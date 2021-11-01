@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="/static/images/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+
+
+    <title>내배캠 | 질문합시다</title>
+    <!-- style -->
+    <style type="text/css">
+        * {
+            font-family: "Stylish", sans-serif;
+        }
+
+        .comment {
+            color: blue;
+            font-weight: bold;
+        }
+
+        .wrap {
+            width: 1200px;
+            margin: auto;
+        }
+
+        #post-box {
+            width: 500px;
+            margin: 20px auto;
+            padding: 50px;
+            border: black solid;
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        let url = "https://m7exho74yc.execute-api.ap-northeast-2.amazonaws.com/Prod";
+
+        $(document).ready(function () {
+            $.ajaxSetup({
+                error: function (jqXHR, exception) {
+                    switch (jqXHR.status) {
+                        case 401:
+                            alert('인증 에러!!');
+                            break;
+                    }
+                },
+                beforeSend: function (xhr) {
+                    if (localStorage.getItem('token') != null) {
+                        xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+                    } else {
+                        xhr.setRequestHeader('Authorization', 'anonymous');
+                    }
+                }
+            });
+            $("#header").load( "header.html" );
+            getArticle(getParam('idx'));
+        });
+
+      function getArticle(idx) {
+            $.ajax({
+                type: "GET",
+                url: `${url}/article?idx=${idx}`,
+                data: {},
+                success: function (response) {
+                    let title = response['article']['title']
+                    let content = response['article']['content']
+                    $("#title").html(title);
+                    $("#content").html(content);
+                }
+            })
+        }
+
+        function getParam(name) {
+            var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+            return results[1] || 0;
+        }
+    </script>
+</head>
+<body>
+<div class="wrap">
+    <div id='header'></div>
+    <div class="card">
+        <div class="card-header">
+            글상세
+        </div>
+        <div class="card-body">
+            <h5 class="card-title" id="title"></h5>
+            <p class="card-text" id="content"></p>
+            <a href="list.html" class="btn btn-primary">목록으로 이동</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

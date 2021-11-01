@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "sam-real"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-5q0t6qnyfgbw"
+s3_prefix = "sam-real"
+region = "ap-northeast-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
