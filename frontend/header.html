@@ -3,9 +3,15 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script>
         $(document).ready(function () {
             loginCheck();
+            setTimeout(function () {
+                Kakao.init('150169fab72c4abb733d5ccf61c4ac70'); //발급받은 키 중 javascript키를 사용해준다.
+                console.log(Kakao.isInitialized()); // sdk초기화여부판단
+            }, 1000);
+
         });
     </script>
 </head>
@@ -16,12 +22,13 @@
     <p class="lead">
         <button onclick="openClose()" id="btn-post-box" type="button" class="btn btn-primary">포스팅 박스 열기</button>
         <button onclick="openCloseLogin()" id="btn-login" type="button" class="btn btn-secondary">로그인</button>
-        <button onclick="openCloseLogin()" id="btn-kakao" type="button" class="btn btn-secondary">카카오</button>
+        <button onclick="getKakaoAccessToken()" id="btn-kakao" type="button" class="btn btn-secondary">카카오</button>
         <button onclick="logout()" id="btn-logout" type="button" class="btn btn-danger" style="display:none">로그아웃
         </button>
         <button onclick="openCloseJoin()" id="btn-join" type="button" class="btn btn-success">회원가입</button>
     </p>
 </div>
+
 
 <div id="post-box" class="form-post" style="display:none">
     <div>

@@ -123,6 +123,25 @@ Resources:
               Effect: Allow
               Action: secretsmanager:GetSecretValue
               Resource: arn:aws:secretsmanager:ap-northeast-2:193945198166:secret:mongo-secret-GE4vNL
+  KakaoLoginFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      MemorySize: 1024
+      CodeUri: kakao_login/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /kakao-login
+            Method: post
+      Policies:
+        - Statement:
+            - Sid: AWSSecretsManagerGetSecretValuePolicy
+              Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: arn:aws:secretsmanager:ap-northeast-2:193945198166:secret:mongo-secret-GE4vNL
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

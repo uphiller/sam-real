@@ -312,24 +312,36 @@ function getParam(name) {
     return results[1] || 0;
 }
 
-// Kakao.init('8890a67c089173194979845f9389950d'); //발급받은 키 중 javascript키를 사용해준다.
-// console.log(Kakao.isInitialized()); // sdk초기화여부판단
-// //카카오로그인
-// function kakaoLogin() {
-//     Kakao.Auth.login({
-//         success: function (response) {
-//             Kakao.API.request({
-//                 url: '/v2/user/me',
-//                 success: function (response) {
-//                     console.log(response)
-//                 },
-//                 fail: function (error) {
-//                     console.log(error)
-//                 },
-//             })
-//         },
-//         fail: function (error) {
-//             console.log(error)
-//         },
-//     })
-// }
+//카카오로그인
+function getKakaoAccessToken() {
+    Kakao.Auth.login({
+        success: function (response) {
+            Kakao.API.request({
+                url: '/v2/user/me',
+                success: function (response) {
+                    accessToken = Kakao.Auth.getAccessToken();
+                    kakaoLogin(accessToken);
+                },
+                fail: function (error) {
+                    alert("카카오 인증에러!!")
+                },
+            })
+        },
+        fail: function (error) {
+            alert("카카오 인증에러!!")
+        },
+    })
+}
+
+function kakaoLogin(accessToken) {
+    $.ajax({
+        type: "POST",
+        url: `${gUrl}/kakao-login`,
+        data: JSON.stringify({access_token: accessToken}),
+        success: function (response) {
+            localStorage.setItem('token', response['token']);
+            alert("로그인 되었습니다!!");
+            loginCheck();
+        }
+    })
+}
